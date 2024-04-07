@@ -5,9 +5,10 @@ import 'package:mealy/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({required this.meal, super.key});
+  const MealItem({required this.onSelectMeal, required this.meal, super.key});
 
   final Meal meal;
+  final void Function(Meal meal) onSelectMeal;
   String get complexityText {
     return meal.complexity.name[0].toUpperCase() +
         meal.complexity.name.substring(1);
@@ -16,15 +17,6 @@ class MealItem extends StatelessWidget {
   String get affordability {
     return meal.affordability.name[0].toUpperCase() +
         meal.affordability.name.substring(1);
-  }
-
-  void _handleSelectMeal(BuildContext context, Meal meal) {
-    Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-      return MealsDetailsScreen(
-        imageUrl: meal.imageUrl,
-        title: meal.title,
-      );
-    }));
   }
 
   @override
@@ -36,7 +28,7 @@ class MealItem extends StatelessWidget {
       elevation: 4,
       child: InkWell(
         onTap: () {
-          _handleSelectMeal(context, meal);
+          onSelectMeal(meal);
         },
         child: Stack(
           children: [
