@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mealy/models/meal.dart';
-import 'package:mealy/screens/meals_details.dart';
 import 'package:mealy/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
