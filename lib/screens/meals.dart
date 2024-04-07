@@ -4,10 +4,10 @@ import 'package:mealy/screens/meals_details.dart';
 import 'package:mealy/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({required this.meals, required this.title, super.key});
+  const MealsScreen({required this.meals, this.title, super.key});
 
   final List<Meal> meals;
-  final String title;
+  final String? title;
   void _handleSelectMeal(BuildContext context, Meal meal) {
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
       return MealsDetailsScreen(meal: meal);
@@ -50,9 +50,12 @@ class MealsScreen extends StatelessWidget {
         ),
       );
     }
+    if (title == null) {
+      return content;
+    }
     return Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(title!),
         ),
         body: content);
   }
