@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mealy/models/meal.dart';
 import 'package:mealy/screens/categories.dart';
+import 'package:mealy/screens/filters.dart';
 import 'package:mealy/screens/meals.dart';
+import 'package:mealy/widgets/main_drawer.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({super.key});
@@ -18,6 +20,14 @@ class _TabsState extends State<Tabs> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _setScreen(String screen) {
+    Navigator.of(context).pop();
+    if (screen == "filters") {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const Filters()));
+    }
   }
 
   void toggleMealFavoriteStatus(Meal meal) {
@@ -57,6 +67,9 @@ class _TabsState extends State<Tabs> {
     return Scaffold(
       appBar: AppBar(
         title: Text(activePageTitle),
+      ),
+      drawer: MainDrawer(
+        onSelectScreen: _setScreen,
       ),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
