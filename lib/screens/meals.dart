@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealy/models/meal.dart';
+import 'package:mealy/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen({required this.meals, required this.title, super.key});
@@ -12,9 +13,7 @@ class MealsScreen extends StatelessWidget {
     Widget content = ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(meals[index].title),
-        );
+        return MealItem(meal: meals[index]);
       },
     );
 
