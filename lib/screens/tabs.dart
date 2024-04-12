@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mealy/data/dummy_data.dart';
 import 'package:mealy/models/meal.dart';
+import 'package:mealy/providers/meals_provider.dart';
 import 'package:mealy/screens/categories.dart';
 import 'package:mealy/screens/filters.dart';
 import 'package:mealy/screens/meals.dart';
