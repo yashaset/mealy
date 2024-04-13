@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mealy/data/dummy_data.dart';
 import 'package:mealy/models/meal.dart';
 import 'package:mealy/providers/meals_provider.dart';
 import 'package:mealy/screens/categories.dart';
 import 'package:mealy/screens/filters.dart';
 import 'package:mealy/screens/meals.dart';
 import 'package:mealy/widgets/main_drawer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const kinitialFilters = {
   Filter.glutenFree: false,
@@ -15,14 +14,14 @@ const kinitialFilters = {
   Filter.vegetarian: false,
 };
 
-class Tabs extends StatefulWidget {
+class Tabs extends ConsumerStatefulWidget {
   const Tabs({super.key});
 
   @override
-  State<Tabs> createState() => _TabsState();
+  ConsumerState<Tabs> createState() => _TabsState();
 }
 
-class _TabsState extends State<Tabs> {
+class _TabsState extends ConsumerState<Tabs> {
   int _selectedPageIndex = 0;
   final List<Meal> _favoritesMeals = [];
   Map<Filter, bool> _selectedFilter = kinitialFilters;
@@ -71,7 +70,8 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeals = dummyMeals.where((meal) {
+    final meals = ref.watch(mealsProvider);
+    final availableMeals = meals.where((meal) {
       if (_selectedFilter[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
