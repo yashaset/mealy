@@ -6,12 +6,8 @@ import 'package:mealy/screens/meals.dart';
 import 'package:mealy/widgets/GridItem.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen(
-      {required this.availableMeals,
-      required this.onToggleFavorite,
-      super.key});
+  const CategoriesScreen({required this.availableMeals, super.key});
 
-  final void Function(Meal meal) onToggleFavorite;
   final List<Meal> availableMeals;
   void _selectCategory(BuildContext context, Category category) {
     final meals = availableMeals
@@ -21,7 +17,6 @@ class CategoriesScreen extends StatelessWidget {
       return MealsScreen(
         meals: meals,
         title: category.title,
-        onToggleFavorite: (meal) => onToggleFavorite(meal),
       );
     }));
   }

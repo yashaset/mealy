@@ -2,29 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:mealy/models/meal.dart';
 import 'package:mealy/screens/meals_details.dart';
 import 'package:mealy/widgets/meal_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MealsScreen extends StatelessWidget {
-  const MealsScreen(
-      {required this.onToggleFavorite,
-      required this.meals,
-      this.title,
-      super.key});
+class MealsScreen extends ConsumerWidget {
+  const MealsScreen({required this.meals, this.title, super.key});
 
   final List<Meal> meals;
   final String? title;
-  final void Function(Meal meal) onToggleFavorite;
 
   void _handleSelectMeal(BuildContext context, Meal meal) {
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
       return MealsDetailsScreen(
         meal: meal,
-        onToggleFavorite: onToggleFavorite,
       );
     }));
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Widget content = ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mealy/models/meal.dart';
+import 'package:mealy/providers/favorites_meal_provider.dart';
+import 'package:mealy/providers/filters_provider.dart';
 import 'package:mealy/providers/meals_provider.dart';
 import 'package:mealy/screens/categories.dart';
 import 'package:mealy/screens/filters.dart';
@@ -23,42 +24,15 @@ class Tabs extends ConsumerStatefulWidget {
 
 class _TabsState extends ConsumerState<Tabs> {
   int _selectedPageIndex = 0;
-  final List<Meal> _favoritesMeals = [];
-  Map<Filter, bool> _selectedFilter = kinitialFilters;
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
 
   void _setScreen(String screen) async {
     Navigator.of(context).pop();
     if (screen == "filters") {
-      final filterResult = await Navigator.of(context).push<Map<Filter, bool>>(
+      await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => Filters(
-            currentFilters: _selectedFilter,
-          ),
+          builder: (ctx) => const Filters(),
         ),
       );
-      setState(() {
-        _selectedFilter = filterResult ?? kinitialFilters;
-      });
-    }
-  }
-
-  void toggleMealFavoriteStatus(Meal meal) {
-    final isExisting = _favoritesMeals.contains(meal);
-    if (isExisting) {
-      setState(() {
-        _favoritesMeals.remove(meal);
-      });
-      _showInfoMessage("Meal is no longer your favorite");
-    } else {
-      setState(() {
-        _favoritesMeals.add(meal);
-      });
-      _showInfoMessage("Meal is added to your favorite");
     }
   }
 
@@ -71,17 +45,18 @@ class _TabsState extends ConsumerState<Tabs> {
   @override
   Widget build(BuildContext context) {
     final meals = ref.watch(mealsProvider);
+    final filters = ref.watch(filtersProvider);
     final availableMeals = meals.where((meal) {
-      if (_selectedFilter[Filter.glutenFree]! && !meal.isGlutenFree) {
+      if (filters[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
-      if (_selectedFilter[Filter.lactoseFree]! && !meal.isLactoseFree) {
+      if (filters[Filter.lactoseFree]! && !meal.isLactoseFree) {
         return false;
       }
-      if (_selectedFilter[Filter.vegan]! && !meal.isVegan) {
+      if (filters[Filter.vegan]! && !meal.isVegan) {
         return false;
       }
-      if (_selectedFilter[Filter.vegetarian]! && !meal.isVegetarian) {
+      if (filters[Filter.vegetarian]! && !meal.isVegetarian) {
         return false;
       }
       return true;
@@ -89,13 +64,12 @@ class _TabsState extends ConsumerState<Tabs> {
 
     Widget activePage = CategoriesScreen(
       availableMeals: availableMeals,
-      onToggleFavorite: (meal) => toggleMealFavoriteStatus(meal),
     );
     var activePageTitle = 'Categories';
     if (_selectedPageIndex == 1) {
+      final favoritesMeals = ref.watch(favoriteMealsProvider);
       activePage = MealsScreen(
-        meals: _favoritesMeals,
-        onToggleFavorite: (meal) => toggleMealFavoriteStatus(meal),
+        meals: favoritesMeals,
       );
       activePageTitle = "Favorites";
     }

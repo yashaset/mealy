@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mealy/providers/filters_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Filter { glutenFree, lactoseFree, vegan, vegetarian }
+class Filters extends ConsumerStatefulWidget {
+  const Filters({super.key});
 
-class Filters extends StatefulWidget {
-  const Filters({required this.currentFilters, super.key});
-
-  final Map<Filter, bool> currentFilters;
   @override
-  State<Filters> createState() => _FiltersState();
+  ConsumerState<Filters> createState() => _FiltersState();
 }
 
-class _FiltersState extends State<Filters> {
+class _FiltersState extends ConsumerState<Filters> {
   var _glutenFreeFilterSet = false;
   var _lactoseFreeFilterSet = false;
   var _vegetarianFilter = false;
@@ -19,10 +18,11 @@ class _FiltersState extends State<Filters> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeFilterSet = widget.currentFilters[Filter.glutenFree]!;
-    _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
-    _vegetarianFilter = widget.currentFilters[Filter.vegetarian]!;
-    _veganFilter = widget.currentFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersProvider);
+    _glutenFreeFilterSet = activeFilters[Filter.glutenFree]!;
+    _lactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+    _vegetarianFilter = activeFilters[Filter.vegetarian]!;
+    _veganFilter = activeFilters[Filter.vegan]!;
   }
 
   @override
@@ -35,12 +35,13 @@ class _FiltersState extends State<Filters> {
         canPop: false,
         onPopInvoked: (bool didPop) {
           if (didPop) return;
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegan: _veganFilter,
             Filter.vegetarian: _vegetarianFilter,
           });
+          return;
         },
         child: Column(
           children: [
